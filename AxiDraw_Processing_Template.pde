@@ -1,4 +1,4 @@
-/*
+  /*
   AxiTurtle
  
   An easy way to program AxiDraw and preview your drawing.
@@ -56,7 +56,7 @@ void setup() {
   //axiRect(150, 150, 200, 200);
   for(int i=0; i<10; i++){
     for(int j = 0; j<10; j++){
-      axiPoint(300+ i*10, 300 + j*10);
+      //axiPoint(300+ i*10, 300 + j*10);
     }
   }
   axiPoint(200, 200);
@@ -89,18 +89,3 @@ void draw() {
   drawAxiGen(); // call original draw() function in AxiGen1 file.
   
 }
-
-void koch(int level, float side) {
-  if (level > 0) {
-    koch(level-1, side/3.0);
-    turnLeft(1/6.0);
-    koch(level-1, side/3.0);
-    turnRight(1/3.0);
-    koch(level-1, side/3.0);
-    turnLeft(1/6.0);
-    koch(level-1, side/3.0);
-  }
-  else {
-    moveForward(side);
-  }
-}  

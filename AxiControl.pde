@@ -39,9 +39,7 @@ void lowerBrush()
         
         BrushDown = true;
         NextMoveTime = millis() + delayAfterLoweringBrush;
-        //lastPosition = new PVector(-1,-1);
       }
-      //      if (debugMode) println("Lower Brush.");
     }
     lowerBrushStatus = -1; // Clear flag.
   }
@@ -51,7 +49,6 @@ void lowerBrush()
 void MoveRelativeXY(int xD, int yD)
 {
   // Change carriage position by (xDelta, yDelta), with XY limit checking, time management, etc.
-
   int xTemp = MotorX + xD;
   int yTemp = MotorY + yD;
 
@@ -132,25 +129,15 @@ void MoveToXY()
         Ani.to(this, sec, "MotorLocatorX", pos[0]);
         Ani.to(this, sec, "MotorLocatorY", pos[1]);
 
-        //        if (debugMode) println("Motor X: " + MotorX + "  Motor Y: " + MotorY);
       }
     }
   }
-
-  // Need 
-  // SubsequentWaitTime
 }
-
-
-
-
 
 void MotorsOff()
 {
   if (SerialOnline)
   {    
     myPort.write("EM,0,0\r");  //Disable both motors
-
-    //    if (debugMode) println("Motors disabled.");
   }
 }

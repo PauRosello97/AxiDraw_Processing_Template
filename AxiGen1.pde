@@ -408,8 +408,6 @@ void drawToDoList()
 
           offScreen.line(x1, y1, x2, y2); // Preview lines that are not yet on paper
 
-          //println("Draw line: "+str(x1)+", "+str(y1)+", "+str(x2) + ", "+str(y2));
-
           x1 = x2;
           y1 = y2;
         } else {
@@ -428,21 +426,15 @@ void drawToDoList()
           virtualPenDown = true;
           //println("pen down");
         } else if (x3 == 35) 
-        {// Home;  MoveToXY(0, 0); Do not draw home moves.
-          //if (virtualPenDown)
-          //offScreen.line(x1, y1, 0, 0); // Preview lines that are not yet on paper
+        {
           x1 = 0;
           y1 = 0;
         }
       }
-
-
       index++;
     }
 
-
     offScreen.endDraw();
-
     imgMain = offScreen.get(0, 0, offScreen.width, offScreen.height);
   }
 }
@@ -459,37 +451,23 @@ void drawAxiGen() {
 
   // NON-DRAWING LOOP CHECKS ==========================================
 
-  if (doSerialConnect == false)
-    checkServiceBrush(); 
-
+  if (doSerialConnect == false) checkServiceBrush(); 
 
   checkHighlights();
 
-
   // ALL ACTUAL DRAWING ==========================================
 
-  if  (hKeyDown)
-  {  // Help display
-    image(loadImage(HelpImageName), 0, 0, 800, 631);
+  image(imgMain, 0, 0, width, height);    // Draw Background image  (incl. paint paths)
 
+  // Draw buttons image
+  image(imgButtons, 0, 0);
 
-    println("HELP requested");
-  } else
-  {
+  // Draw highlight image
+  image(imgHighlight, 0, 0);
 
-    image(imgMain, 0, 0, width, height);    // Draw Background image  (incl. paint paths)
-
-    // Draw buttons image
-    image(imgButtons, 0, 0);
-
-    // Draw highlight image
-    image(imgHighlight, 0, 0);
-
-    // Draw locator crosshair at xy pos, less crosshair offset
-    image(imgLocator, MotorLocatorX-10, MotorLocatorY-15);
-  }
-
-
+  // Draw locator crosshair at xy pos, less crosshair offset
+  image(imgLocator, MotorLocatorX-10, MotorLocatorY-15);
+  
   if (doSerialConnect)
   {
     // FIRST RUN ONLY:  Connect here, so that 
@@ -525,32 +503,9 @@ void drawAxiGen() {
   }
 }
 
-
 void mousePressed() {
-  boolean doHighlightRedraw = false;
-
-  //The mouse button was just pressed!  Let's see where the user clicked!
-
-  if ((mouseX >= MousePaperLeft) && (mouseX <= MousePaperRight) && (mouseY >= MousePaperTop) && (mouseY <= MousePaperBottom))
-  { 
-
-    GenerateArtwork(mouseX, mouseY, 5 + random(25), 100);
-
-    doHighlightRedraw = true;
-  }
-
-
-  if (doHighlightRedraw) {
-    redrawLocator();
-    redrawHighlight();
-  }
-
-  if ( pauseButton.isSelected() )  
-    pause(); 
-
+  if (pauseButton.isSelected()) pause(); 
 }
-
-
 
 void GenerateArtwork(float xStart, float yStart, float radius, int steps)
 {
@@ -591,107 +546,4 @@ void GenerateArtwork(float xStart, float yStart, float radius, int steps)
   }
 
   ToDoList = (PVector[]) append(ToDoList, new PVector(-30, 0)); //Command 30 (raise pen)
-}
-
-
-void keyReleased()
-{
-
-  if (key == CODED) {
-
-    if (keyCode == UP) keyup = false; 
-    if (keyCode == DOWN) keydown = false; 
-    if (keyCode == LEFT) keyleft = false; 
-    if (keyCode == RIGHT) keyright = false; 
-
-    if (keyCode == SHIFT) { 
-
-      shiftKeyDown = false;
-    }
-  } else
-    key = Character.toLowerCase(key);
-
-  if ( key == 'h')  // display help
-  {
-    hKeyDown = false;
-  }
-}
-
-
-
-void keyPressed()
-{
-
-
-  if (key == CODED) {
-
-    // Arrow keys are used for nudging, with or without shift key.
-
-    if (keyCode == UP) 
-    {
-      keyup = true;
-    }
-    if (keyCode == DOWN)
-    { 
-      keydown = true;
-    }
-    if (keyCode == LEFT) keyleft = true; 
-    if (keyCode == RIGHT) keyright = true; 
-    if (keyCode == SHIFT) shiftKeyDown = true;
-  } else
-  {
-    key = Character.toLowerCase(key);
-    println("Key pressed" + key); 
-
-    if ( key == 'b')   // Toggle brush up or brush down with 'b' key
-    {
-      if (BrushDown)
-        raiseBrush();
-      else
-        lowerBrush();
-    }
-
-    if ( key == 'z')  // Zero motor coordinates
-      zero();
-
-    if ( key == 'c')  // Zero motor coordinates
-      clearall();
-
-    if ( key == ' ')  //Space bar: Pause
-      pause();
-
-    if ( key == 'q')  // Move home (0,0)
-    {
-      raiseBrush();
-      MoveToXY(0, 0);
-    }
-
-    if ( key == 'h')  // display help
-    {
-      hKeyDown = true;
-      println("HELP requested");
-    } 
-
-    if ( key == 't')  // Disable motors, to manually move carriage.  
-      MotorsOff();
-
-    if ( key == '1')
-      MotorSpeed = 500;  
-    if ( key == '2')
-      MotorSpeed = 1000;        
-    if ( key == '3')
-      MotorSpeed = 2000;        
-    if ( key == '4')
-      MotorSpeed = 3000;        
-    if ( key == '5')
-      MotorSpeed = 4000;        
-    if ( key == '6')
-      MotorSpeed = 4500;        
-    if ( key == '7')
-      MotorSpeed = 5000;        
-    if ( key == '8')
-      MotorSpeed = 5500;        
-    if ( key == '9')
-      MotorSpeed = 6000;
-  }
 }
