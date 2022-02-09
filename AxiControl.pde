@@ -1,5 +1,5 @@
 /**
- * RoboPaint RT - watercolorbot control functions
+ * AxiDraw control functions
  */
 
 void raiseBrush() 
@@ -12,7 +12,7 @@ void raiseBrush()
   {
     if (BrushDown == true) {
       if (SerialOnline) {
-        myPort.write("SP,0\r");           
+        myPort.write("SP,0," + str(delayAfterRaisingBrush) + "\r");           
         BrushDown = false;
         NextMoveTime = millis() + delayAfterRaisingBrush;
       }
@@ -22,19 +22,6 @@ void raiseBrush()
   }
 }
 
-void ConfigBrushDownHeight(int state) 
-{ 
-  // State 0: Wash      ConfigBrushDownHeight(0);// Set Brush to WASH height
-  // State 1: Paint     ConfigBrushDownHeight(1);// Set Brush to PAINT height
-
-  int position;
-
-  position = ServoPaint;
-
-  if (SerialOnline) {
-    myPort.write("SC,4," + str(position) + "\r");  // Brush DOWN position
-  }
-}
 
 void lowerBrush() 
 {
@@ -48,16 +35,18 @@ void lowerBrush()
     if  (BrushDown == false)
     {      
       if (SerialOnline) {
-        myPort.write("SP,1\r");           // Lower Brush
+        myPort.write("SP,1," + str(delayAfterLoweringBrush) + "\r");           
+        
         BrushDown = true;
         NextMoveTime = millis() + delayAfterLoweringBrush;
-        lastPosition = -1;
+        //lastPosition = new PVector(-1,-1);
       }
       //      if (debugMode) println("Lower Brush.");
     }
     lowerBrushStatus = -1; // Clear flag.
   }
 }
+
 
 void MoveRelativeXY(int xD, int yD)
 {
@@ -68,6 +57,7 @@ void MoveRelativeXY(int xD, int yD)
 
   MoveToXY(xTemp, yTemp);
 }
+
 
 void MoveToXY(int xLoc, int yLoc)
 {
@@ -99,11 +89,15 @@ void MoveToXY()
     } else {
 
       moveStatus = -1;
-      if (MoveDestX > MotorMaxX) MoveDestX = MotorMaxX; 
-      else if (MoveDestX < MotorMinX) MoveDestX = MotorMinX; 
+      if (MoveDestX > MotorMaxX) 
+        MoveDestX = MotorMaxX; 
+      else if (MoveDestX < MotorMinX) 
+        MoveDestX = MotorMinX; 
 
-      if (MoveDestY > MotorMaxY) MoveDestY = MotorMaxY; 
-      else if (MoveDestY < MotorMinY) MoveDestY = MotorMinY; 
+      if (MoveDestY > MotorMaxY) 
+        MoveDestY = MotorMaxY; 
+      else if (MoveDestY < MotorMinY) 
+        MoveDestY = MotorMinY; 
 
       int xD = MoveDestX - MotorX;
       int yD = MoveDestY - MotorY;
@@ -135,13 +129,21 @@ void MoveToXY()
         int[] pos = getMotorPixelPos();
         float sec = traveltime_ms/1000.0;
 
-        println(pos[0] + ", " + pos[1]);
         Ani.to(this, sec, "MotorLocatorX", pos[0]);
         Ani.to(this, sec, "MotorLocatorY", pos[1]);
+
+        //        if (debugMode) println("Motor X: " + MotorX + "  Motor Y: " + MotorY);
       }
     }
   }
+
+  // Need 
+  // SubsequentWaitTime
 }
+
+
+
+
 
 void MotorsOff()
 {
@@ -151,27 +153,4 @@ void MotorsOff()
 
     //    if (debugMode) println("Motors disabled.");
   }
-}
-
-void zero()
-{
-  // Mark current location as (0,0) in motor coordinates.  
-  // Manually move the motor carriage to the left-rear (upper left) corner before executing this command.
-
-  MotorX = 0;
-  MotorY = 0;
-
-  moveStatus = -1;
-  MoveDestX = -1;
-  MoveDestY = -1;
-
-  // Calculate and animate position location cursor
-  int[] pos = getMotorPixelPos();
-  float sec = .25;
-
-  Ani.to(this, sec, "MotorLocatorX", pos[0]);
-  Ani.to(this, sec, "MotorLocatorY", pos[1]);
-
-
-  //  if (debugMode) println("Motor X: " + MotorX + "  Motor Y: " + MotorY);
 }

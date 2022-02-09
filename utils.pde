@@ -1,63 +1,3 @@
-
-
-int xyEncodeInt2() {
-
-  // Perform XY limit checks on user input, and then encode position of mouse into a single int.
-  // Constrain inputs to be within range of paper size, but all numbers are w.r.t. absolute window origin.
-  // This is essentially only called when the mouse position changes.
-
-  int xpos = mouseX;
-  int ypos = mouseY;
-
-  if (xpos < MousePaperLeft)
-    xpos = MousePaperLeft;
-  if (xpos > MousePaperRight)
-    xpos = MousePaperRight;
-
-  if (ypos < MousePaperTop)
-    ypos = MousePaperTop;
-  if (ypos > MousePaperBottom )
-    ypos = MousePaperBottom;
-
-  return (xpos * 10000) + ypos ;
-}
-
-int xyEncodeInt2(float a, float b) {
-
-  // Perform XY limit checks on user input, and then encode position of mouse into a single int.
-  // Constrain inputs to be within range of paper size, but all numbers are w.r.t. absolute window origin.
-  // This is essentially only called when the mouse position changes.
-
-  int xpos = int(a);
-  int ypos = int(b);
-
-  if (xpos < MousePaperLeft)
-    xpos = MousePaperLeft;
-  if (xpos > MousePaperRight)
-    xpos = MousePaperRight;
-
-  if (ypos < MousePaperTop)
-    ypos = MousePaperTop;
-  if (ypos > MousePaperBottom )
-    ypos = MousePaperBottom;
-
-  return (xpos * 10000) + ypos ;
-}
-
-
-int[] xyDecodeInt2(int encodedInt) {
-
-  // Decode position coordinate from a single int.
-
-  int x = floor(encodedInt / 10000);
-  int y = encodedInt - 10000 * x;
-  int[] out = {
-    x, y
-  };
-  return out;
-}
-
-
 // Return the [x,y] of the motor position in pixels
 int[] getMotorPixelPos() {
   int[] out = {
@@ -69,19 +9,6 @@ int[] getMotorPixelPos() {
   return out;
 }
 
-// Get float distance between two int encoded coordinates
-float getDistance(int coord1Int, int coord2Int)
-{
-  int[] c1 = xyDecodeInt2(coord1Int);
-  int[] c2 = xyDecodeInt2(coord2Int);
-
-  int xdiff = abs(c1[0] - c2[0]);
-  int ydiff = abs(c1[1] - c2[1]);
-
-  return sqrt(pow(xdiff, 2) + pow(ydiff, 2));
-}
-
-
 
 // Get float distance between two non-encoded (x,y) positions. 
 float getDistance(int x1, int y1, int x2, int y2)
@@ -91,20 +18,11 @@ float getDistance(int x1, int y1, int x2, int y2)
   return sqrt(pow(xdiff, 2) + pow(ydiff, 2));
 }
 
-
-
-
-
-
-
-
-
 void scanSerial() 
 {  
 
   // Serial port search string:  
   int PortCount = 0;
-  int PortNumber = -1;
   String portName;
   String str1, str2;
   int j;
@@ -173,9 +91,11 @@ void scanSerial()
 
       j = 0;
       while (j < PortCount) {
-        str2 = Serial.list()[j].substring(0, 11);
-        if (str1.equals(str2) == true)
-          OpenPortList =  append(OpenPortList, j);
+        if (Serial.list()[j].length() > 11) {
+          str2 = Serial.list()[j].substring(0, 11);
+          if (str1.equals(str2) == true)
+            OpenPortList =  append(OpenPortList, j);
+        }
         j++;
       }
     }
@@ -242,4 +162,117 @@ void scanSerial()
       j++;
     }
   }
+}
+
+
+
+
+// Only need to redraw if hovering or changing state
+void redrawButtons() {
+
+
+  offScreen.beginDraw();
+  offScreen.background(0, 0);
+
+  DrawButtons(offScreen);
+
+  offScreen.endDraw();
+
+  imgButtons = offScreen.get(0, 0, offScreen.width, offScreen.height);
+}
+
+
+// Only need to redraw if hovering or change select on specific items
+void redrawHighlight() {
+  offScreen.beginDraw();
+  offScreen.background(0, 0);
+
+  offScreen.endDraw();
+  imgHighlight = offScreen.get(0, 0, offScreen.width, offScreen.height);
+
+  // TODO: Remove this section?
+}
+
+
+// Draw the locator crosshair to the offscreen buffer and fill imgLocator with it
+// Only need to redraw this when it changes color
+void redrawLocator() {
+  offScreen.beginDraw();
+  offScreen.background(0, 0);
+
+  offScreen.stroke(0, 0, 0, 128); 
+  offScreen.strokeWeight(2);  
+  int x0 = 10;
+  int y0 = 10; 
+
+  if (BrushDown)
+    offScreen.fill(PenColor);
+  else
+    offScreen.noFill();
+
+  offScreen.ellipse(x0, y0, 10, 10);
+
+  offScreen.line(x0 + 5, y0, x0 + 10, y0);
+  offScreen.line(x0 - 5, y0, x0 - 10, y0);
+  offScreen.line(x0, y0 + 5, x0, y0 + 10);
+  offScreen.line(x0, y0 - 5, x0, y0 - 10);
+  offScreen.endDraw();
+
+  imgLocator = offScreen.get(0, 0, 25, 25);
+}
+
+
+
+
+void zero()
+{
+  // Mark current location as (0,0) in motor coordinates.  
+  // Manually move the motor carriage to the left-rear (upper left) corner before executing this command.
+
+  MotorX = 0;
+  MotorY = 0;
+
+  moveStatus = -1;
+  MoveDestX = -1;
+  MoveDestY = -1;
+
+  // Calculate and animate position location cursor
+  int[] pos = getMotorPixelPos();
+  float sec = .25;
+
+  Ani.to(this, sec, "MotorLocatorX", pos[0]);
+  Ani.to(this, sec, "MotorLocatorY", pos[1]);
+
+
+  //  if (debugMode) println("Motor X: " + MotorX + "  Motor Y: " + MotorY);
+}
+
+void clearall()
+{  // ***** CLEAR ALL *****
+
+  ToDoList = new PVector[0];
+
+  ToDoList = (PVector[]) append(ToDoList, new PVector(-30, 0)); //Command 30 (Raise pen)
+  ToDoList = (PVector[]) append(ToDoList, new PVector(-35, 0)); //Command 35 (Go home)
+
+
+  indexDone = -1;    // Index in to-do list of last action performed
+  indexDrawn = -1;   // Index in to-do list of last to-do element drawn to screen
+
+  drawToDoList();
+
+  Paused = false; 
+  pause();
+}
+
+void quitApp()
+{  // ***** QUIT *****
+
+  if (SerialOnline)
+  { 
+    myPort.clear(); 
+    myPort.stop();
+  }
+
+  exit();
 }
