@@ -174,8 +174,6 @@ void redrawButtons() {
   offScreen.beginDraw();
   offScreen.background(0, 0);
 
-  DrawButtons(offScreen);
-
   offScreen.endDraw();
 
   imgButtons = offScreen.get(0, 0, offScreen.width, offScreen.height);

@@ -148,11 +148,6 @@ int LabelColor = 150;
 color TextHighLight = Black;
 int DefocusColor = 175;
 
-SimpleButton pauseButton;
-SimpleButton brushLabel;
-SimpleButton motorLabel;
-SimpleButton UIMessage;
-
 void setupAxiGen() 
 {
   //pixelDensity(2);
@@ -205,10 +200,6 @@ void setupAxiGen()
 
   font_ML16  = loadFont("Miso-Light-16.vlw"); 
   font_CB = loadFont("Miso-20.vlw"); 
-
-  int xbutton = MousePaperLeft + 100;
-
-  pauseButton = new SimpleButton("Start", xbutton, MousePaperBottom + 20, font_CB, 20, TextColor, TextHighLight);
 
   rectMode(CORNERS);
 
@@ -287,7 +278,6 @@ void pause()
   } else
   {
     Paused = true;
-    pauseButton.label = "Resume";
     //TextColor
     if (BrushDown) {
       BrushDownAtPause = true; 
@@ -496,15 +486,13 @@ void drawAxiGen() {
     { 
       println("Now entering offline simulation mode.\n");
 
-      UIMessage.label = "AxiDraw not found.  Entering Simulation Mode. ";
-      UIMessageExpire = millis() + 5000;
       redrawButtons();
     }
   }
 }
 
-void mousePressed() {
-  if (pauseButton.isSelected()) pause(); 
+void keyPressed(){
+  if(keyCode == 32) pause(); 
 }
 
 void GenerateArtwork(float xStart, float yStart, float radius, int steps)
