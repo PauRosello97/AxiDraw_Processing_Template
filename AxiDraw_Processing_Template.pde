@@ -37,7 +37,6 @@ boolean debugMode = false;
 
 PGraphics offScreen;
 
-PImage imgBackground;   // Stores background data image only.
 PImage imgMain;         // Primary drawing canvas
 PImage imgLocator;      // Cursor crosshairs
 PImage imgButtons;      // Text buttons
@@ -66,7 +65,6 @@ int MousePaperTop =  62;
 int MousePaperBottom =  600;
 
 int yBrushRestPositionPixels = 6;
-
 
 int ServoUp;    // Brush UP position, native units
 int ServoPaint;    // Brush DOWN position, native units. 
@@ -118,7 +116,6 @@ boolean lastBrushDown_DrawingPath;
 int lastX_DrawingPath;
 int lastY_DrawingPath;
 
-
 int NextMoveTime;          //Time we are allowed to begin the next movement (i.e., when the current move will be complete).
 int SubsequentWaitTime = -1;    //How long the following movement will take.
 int UIMessageExpire;
@@ -130,7 +127,6 @@ int MoveDestY;
 int PaintDest; 
 
 boolean Paused;
-
 
 int ToDoList[];  // Queue future events in an integer array; executed when PriorityList is empty.
 int indexDone;    // Index in to-do list of last action performed
@@ -207,7 +203,6 @@ void setup()
   MotorLocatorY = pos[1];
 
   NextMoveTime = millis();
-  imgBackground = loadImage(BackgroundImageName);  // Load the image into the program  
 
   drawToDoList();
   redrawButtons();
@@ -323,7 +318,6 @@ void drawToDoList()
     offScreen.beginDraw();
 
     if (indexDrawn < 0) {
-      offScreen.image(imgBackground, 0, 0, 800, 631);  // Copy original background image into place!
 
       offScreen.noFill();
       offScreen.strokeWeight(0.5);
@@ -471,8 +465,6 @@ void cosesInDraw(){
 
   checkHighlights();
 
-
-
   // ALL ACTUAL DRAWING ==========================================
 
   if  (hKeyDown)
@@ -520,6 +512,7 @@ void cosesInDraw(){
 }
 
 void draw() {
+  background(255);
   cosesInDraw();
 }
 
