@@ -1,4 +1,4 @@
-  /*
+/*
   AxiTurtle
  
   An easy way to program AxiDraw and preview your drawing.
@@ -53,7 +53,7 @@ void setup() {
   setupAxiGen(); // call original setup() function in AxiGen1 file.
   
   //axiRect(100, 100, 200, 200);
-  //axiRect(150, 150, 200, 200);
+  axiRect(150, 150, 200, 200);
   for(int i=0; i<10; i++){
     for(int j = 0; j<10; j++){
       //axiPoint(300+ i*10, 300 + j*10);

@@ -2,7 +2,6 @@
  * Loop check functions (not for drawing)
  */
 
-
 // Manage checking if the brush needs servicing, and moving to the next path
 void checkServiceBrush() {
 

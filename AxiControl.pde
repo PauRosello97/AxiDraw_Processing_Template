@@ -41,7 +41,6 @@ void lowerBrush()
   }
 }
 
-
 void MoveRelativeXY(int xD, int yD)
 {
   // Change carriage position by (xDelta, yDelta), with XY limit checking, time management, etc.
@@ -49,7 +48,6 @@ void MoveRelativeXY(int xD, int yD)
   int yTemp = MotorY + yD;
   MoveToXY(xTemp, yTemp);
 }
-
 
 void MoveToXY(int xLoc, int yLoc)
 {

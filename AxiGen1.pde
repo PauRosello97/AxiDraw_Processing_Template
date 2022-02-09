@@ -4,7 +4,6 @@
  Generative art example with AxiDraw
  https://github.com/evil-mad/AxiDraw-Processing
  
- 
  Based on RoboPaint RT: 
  https://github.com/evil-mad/robopaint-rt
 */
@@ -134,40 +133,26 @@ int DefocusColor = 175;
 
 void setupAxiGen() 
 {
-  //pixelDensity(2);
-  //size(800, 631, P2D); // moved to AxiTurtle file. size() must be used in setup().
-
   Ani.init(this); // Initialize animation library
   Ani.setDefaultEasing(Ani.LINEAR);
 
   firstPath = true;
 
-  //offScreen = createGraphics(800, 631, JAVA2D);
   offScreen = createGraphics(800, 631);
-
-
-  //// Allow frame to be resized?
-  //  if (frame != null) {
-  //    frame.setResizable(true);
-  //  }
 
   surface.setTitle("AxiTurtle");
 
-  if (PaperSizeA4)
-  {
+  if (PaperSizeA4){
     MousePaperRight = round(MousePaperLeft + PixelsPerInch * 297/25.4);
     MousePaperBottom = round(MousePaperTop + PixelsPerInch * 210/25.4);
-  } else
-  {
+  } else {
     MousePaperRight = round(MousePaperLeft + PixelsPerInch * 11.0);
     MousePaperBottom = round(MousePaperTop + PixelsPerInch * 8.5);
   }
 
-
   shiftKeyDown = false;
 
   frameRate(60);  // sets maximum speed only
-
 
   MotorMinX = 0;
   MotorMinY = 0;
@@ -178,10 +163,6 @@ void setupAxiGen()
 
   ServoUp = 7500 + 175 * ServoUpPct;    // Brush UP position, native units
   ServoPaint = 7500 + 175 * ServoPaintPct;   // Brush DOWN position, native units. 
-
-
-  // Button setup
-
 
   rectMode(CORNERS);
 
@@ -202,7 +183,6 @@ void setupAxiGen()
   moveStatus = -1;
   MoveDestX = -1;
   MoveDestY = -1;
-
 
   Paused = true;
   BrushDownAtPause = false;
@@ -225,15 +205,12 @@ void setupAxiGen()
 
 void pause()
 {
-  if (Paused)
-  {
+  if (Paused) {
     Paused = false;
 
-    if (BrushDownAtPause)
-    {
+    if (BrushDownAtPause) {
       int waitTime = NextMoveTime - millis();
-      if (waitTime > 0)
-      { 
+      if (waitTime > 0) { 
         delay (waitTime);  // Wait for prior move to finish:
       }
 
@@ -242,16 +219,14 @@ void pause()
       }
 
       waitTime = NextMoveTime - millis();
-      if (waitTime > 0)
-      { 
+      if (waitTime > 0) { 
         delay (waitTime);  // Wait for prior move to finish:
       }
 
       MoveToXY(xLocAtPause, yLocAtPause);
 
       waitTime = NextMoveTime - millis();
-      if (waitTime > 0)
-      { 
+      if (waitTime > 0) { 
         delay (waitTime);  // Wait for prior move to finish:
       }
 
@@ -330,14 +305,12 @@ void drawToDoList()
       offScreen.noFill();
       offScreen.strokeWeight(0.5);
 
-      if (PaperSizeA4)
-      {
+      if (PaperSizeA4) {
         offScreen.stroke(128, 128, 255);  // Light Blue: A4
         float rectW = PixelsPerInch * 297/25.4;
         float rectH = PixelsPerInch * 210/25.4;
         offScreen.rect(float(MousePaperLeft), float(MousePaperTop), rectW, rectH);
-      } else
-      {   
+      } else {   
         offScreen.stroke(255, 128, 128); // Light Red: US Letter
         float rectW = PixelsPerInch * 11.0;
         float rectH = PixelsPerInch * 8.5;
@@ -347,7 +320,6 @@ void drawToDoList()
       offScreen.image(imgMain, 0, 0);
 
     offScreen.strokeWeight(1); 
-    //offScreen.stroke(PenColor);
 
     brightness = 0;
     color DoneColor = lerpColor(PenColor, white, brightness);
@@ -383,7 +355,6 @@ void drawToDoList()
           x1 = x2;
           y1 = y2;
         } else {
-          //println("Pen up move");
           x1 = x2;
           y1 = y2;
         }
@@ -392,7 +363,6 @@ void drawToDoList()
         if (x3 == 30) 
         {
           virtualPenDown = false;
-          //println("pen up");
         } else if (x3 == 31) 
         {  
           virtualPenDown = true;
@@ -430,12 +400,8 @@ void drawAxiGen() {
   // ALL ACTUAL DRAWING ==========================================
 
   image(imgMain, 0, 0, width, height);    // Draw Background image  (incl. paint paths)
-
-  // Draw buttons image
-  image(imgButtons, 0, 0);
-
-  // Draw highlight image
-  image(imgHighlight, 0, 0);
+  //image(imgButtons, 0, 0); // Draw buttons image
+  image(imgHighlight, 0, 0); // Draw highlight image
 
   // Draw locator crosshair at xy pos, less crosshair offset
   image(imgLocator, MotorLocatorX-10, MotorLocatorY-15);
