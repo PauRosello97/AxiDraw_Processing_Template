@@ -8,15 +8,13 @@ void raiseBrush()
   if (waitTime > 0)
   {
     raiseBrushStatus = 1; // Flag to raise brush when no longer busy.
-  } else
-  {
+  } else {
     if (BrushDown == true) {
       if (SerialOnline) {
         myPort.write("SP,0," + str(delayAfterRaisingBrush) + "\r");           
         BrushDown = false;
         NextMoveTime = millis() + delayAfterRaisingBrush;
       }
-      //      if (debugMode) println("Raise Brush.");
     }
     raiseBrushStatus = -1; // Clear flag.
   }
@@ -26,12 +24,10 @@ void raiseBrush()
 void lowerBrush() 
 {
   int waitTime = NextMoveTime - millis();
-  if (waitTime > 0)
-  {
+  if (waitTime > 0) {
     lowerBrushStatus = 1;  // Flag to lower brush when no longer busy.
     // delay (waitTime);  // Wait for prior move to finish:
-  } else
-  { 
+  } else { 
     if  (BrushDown == false)
     {      
       if (SerialOnline) {
@@ -51,7 +47,6 @@ void MoveRelativeXY(int xD, int yD)
   // Change carriage position by (xDelta, yDelta), with XY limit checking, time management, etc.
   int xTemp = MotorX + xD;
   int yTemp = MotorY + yD;
-
   MoveToXY(xTemp, yTemp);
 }
 
@@ -60,7 +55,6 @@ void MoveToXY(int xLoc, int yLoc)
 {
   MoveDestX = xLoc;
   MoveDestY = yLoc;
-
   MoveToXY();
 }
 
@@ -86,15 +80,11 @@ void MoveToXY()
     } else {
 
       moveStatus = -1;
-      if (MoveDestX > MotorMaxX) 
-        MoveDestX = MotorMaxX; 
-      else if (MoveDestX < MotorMinX) 
-        MoveDestX = MotorMinX; 
+      if (MoveDestX > MotorMaxX) MoveDestX = MotorMaxX; 
+      else if (MoveDestX < MotorMinX) MoveDestX = MotorMinX; 
 
-      if (MoveDestY > MotorMaxY) 
-        MoveDestY = MotorMaxY; 
-      else if (MoveDestY < MotorMinY) 
-        MoveDestY = MotorMinY; 
+      if (MoveDestY > MotorMaxY) MoveDestY = MotorMaxY; 
+      else if (MoveDestY < MotorMinY) MoveDestY = MotorMinY; 
 
       int xD = MoveDestX - MotorX;
       int yD = MoveDestY - MotorY;
@@ -136,8 +126,5 @@ void MoveToXY()
 
 void MotorsOff()
 {
-  if (SerialOnline)
-  {    
-    myPort.write("EM,0,0\r");  //Disable both motors
-  }
+  if (SerialOnline) myPort.write("EM,0,0\r");  //Disable both motors
 }

@@ -1,5 +1,5 @@
 /*
-  AxiGen
+ AxiGen
  
  Generative art example with AxiDraw
  https://github.com/evil-mad/AxiDraw-Processing
@@ -7,12 +7,10 @@
  
  Based on RoboPaint RT: 
  https://github.com/evil-mad/robopaint-rt
- 
- */
+*/
 
 import de.looksgood.ani.*;
 import processing.serial.*;
-
 
 // User Settings: 
 float MotorSpeed = 4000.0;  // Steps per second, 1500 default
@@ -30,9 +28,6 @@ int delayAfterLoweringBrush = 300; //ms
 boolean debugMode = false;
 
 boolean PaperSizeA4 = true; // true for A4. false for US letter.
-
-
-
 
 // Offscreen buffer images for holding drawn elements, makes redrawing MUCH faster
 
@@ -58,7 +53,6 @@ float PixelsPerInch = 63.3;
 // Vertical travel for 8.5 inches should be  (8.5 inches * 2032 steps/inch) / (32.1 steps/px) = 538 px.
 // PixelsPerInch is given by (2032 steps/inch) / (32.1 steps/px) = 63.3 pixels per inch
 
-
 // Positions of screen items
 
 int MousePaperLeft =  30;
@@ -67,7 +61,6 @@ int MousePaperTop =  62;
 int MousePaperBottom =  600;
 
 int yBrushRestPositionPixels = 6;
-
 
 int ServoUp;    // Brush UP position, native units
 int ServoPaint;    // Brush DOWN position, native units. 
@@ -99,8 +92,6 @@ int MotorLocatorX;  // Position of motor locator
 int MotorLocatorY; 
 PVector lastPosition; // Record last encoded position for drawing
 
-
-
 boolean forceRedraw;
 boolean shiftKeyDown;
 boolean keyup = false;
@@ -114,7 +105,6 @@ int lastButtonUpdateY = 0;
 boolean lastBrushDown_DrawingPath;
 int lastX_DrawingPath;
 int lastY_DrawingPath;
-
 
 int NextMoveTime;          //Time we are allowed to begin the next movement (i.e., when the current move will be complete).
 int SubsequentWaitTime = -1;    //How long the following movement will take.
@@ -132,16 +122,10 @@ PVector[] ToDoList;  // Queue future events in an array; Coordinate/command
 // X-coordinate, Y Coordinate.
 // If X-coordinate is negative, that is a non-move command.
 
-
 int indexDone;    // Index in to-do list of last action performed
 int indexDrawn;   // Index in to-do list of last to-do element drawn to screen
 
-
 // Active buttons
-PFont font_ML16;
-PFont font_CB; // Command button font
-
-
 
 int TextColor = 75;
 int LabelColor = 150;
@@ -198,8 +182,6 @@ void setupAxiGen()
 
   // Button setup
 
-  font_ML16  = loadFont("Miso-Light-16.vlw"); 
-  font_CB = loadFont("Miso-20.vlw"); 
 
   rectMode(CORNERS);
 
@@ -493,45 +475,4 @@ void drawAxiGen() {
 
 void keyPressed(){
   if(keyCode == 32) pause(); 
-}
-
-void GenerateArtwork(float xStart, float yStart, float radius, int steps)
-{
-  int i = 0;
-  float r;
-  float xPos = xStart;
-  float yPos = yStart;
-
-  ToDoList = (PVector[]) append(ToDoList, new PVector(-30, 0)); //Command 30 (raise pen)
-
-  // Command Code: Move to first (X,Y) point
-  ToDoList = (PVector[]) append(ToDoList, new PVector(xPos, yPos)); 
-
-  ToDoList = (PVector[]) append(ToDoList, new PVector(-31, 0)); //Command 31 (lower pen)
-
-
-  // Trivial example of a generative method: 
-  // Construct a random walk of constant-length steps.
-  // Continue walking until maximum number of steps OR
-  //     until we hit the walls of our page.
-
-  while (i < steps)
-  {
-    r = random(TWO_PI);
-
-    xPos = xPos + (radius * cos(r));
-    yPos = yPos + (radius * sin(r));   
-
-    if ((xPos < MousePaperLeft) || (xPos > MousePaperRight))
-      break;
-    if ((yPos < MousePaperTop) || (yPos > MousePaperBottom))
-      break;
-
-    // Command Code: Move to (X,Y)
-    ToDoList = (PVector[]) append(ToDoList, new PVector(xPos, yPos)); 
-
-    i++;
-  }
-
-  ToDoList = (PVector[]) append(ToDoList, new PVector(-30, 0)); //Command 30 (raise pen)
 }
