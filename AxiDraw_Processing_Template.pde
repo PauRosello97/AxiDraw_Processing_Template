@@ -52,23 +52,40 @@ void setup() {
   size(800, 631, P2D); // moved from AxiGen1 file. size() must be used in setup().
   setupAxiGen(); // call original setup() function in AxiGen1 file.
   
-  // Your code starts here:
-  
-  // Example: Koch snowflake fractal 
-  /*
-  moveTo(200, 150);
-  penDown();
-  for (int i=0; i<2; i++) {
-    koch(4, 400);
-    turnRight(1/3.0);
+  //axiRect(100, 100, 200, 200);
+  //axiRect(150, 150, 200, 200);
+  for(int i=0; i<10; i++){
+    for(int j = 0; j<10; j++){
+      axiPoint(300+ i*10, 300 + j*10);
+    }
   }
-  */
+  axiPoint(200, 200);
+
   moveTo(0, 0);
-  lineTo(100, 100);
+}
+
+void axiRect(float x, float y, float w, float h){
+  moveTo(x, y);
+  lineTo(x+w, y);
+  lineTo(x+w, y+h);
+  lineTo(x, y+h);
+  lineTo(x, y);
+}
+
+void axiPoint(float x, float y){
+  moveTo(x, y);
+  penDown();
+  penUp();
+}
+
+void axiLine(float x1, float y1, float x2, float y2){
+  moveTo(x1, y1);
+  lineTo(x2, y2);
 }
 
 void draw() {
   //Don't change the following line of code:
+  background(255);
   drawAxiGen(); // call original draw() function in AxiGen1 file.
   
 }

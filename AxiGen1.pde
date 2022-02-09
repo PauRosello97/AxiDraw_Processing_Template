@@ -38,7 +38,6 @@ boolean PaperSizeA4 = true; // true for A4. false for US letter.
 
 PGraphics offScreen;
 
-PImage imgBackground;   // Stores background data image only.
 PImage imgMain;         // Primary drawing canvas
 PImage imgLocator;      // Cursor crosshairs
 PImage imgButtons;      // Text buttons
@@ -208,7 +207,6 @@ void setupAxiGen()
   font_CB = loadFont("Miso-20.vlw"); 
 
   int xbutton = MousePaperLeft + 100;
-  int ybutton = MousePaperBottom + 20;
 
   pauseButton = new SimpleButton("Start", xbutton, MousePaperBottom + 20, font_CB, 20, TextColor, TextHighLight);
 
@@ -244,7 +242,6 @@ void setupAxiGen()
   MotorLocatorY = pos[1];
 
   NextMoveTime = millis();
-  imgBackground = loadImage(BackgroundImageName);  // Load the image into the program  
 
   drawToDoList();
   redrawButtons();
@@ -357,7 +354,6 @@ void drawToDoList()
     offScreen.beginDraw();
 
     if (indexDrawn < 0) {
-      offScreen.image(imgBackground, 0, 0, 800, 631);  // Copy original background image into place!
 
       offScreen.noFill();
       offScreen.strokeWeight(0.5);
